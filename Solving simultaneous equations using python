@@ -1,7 +1,0 @@
-#import numpy for linear algebra
-import numpy as np
-
-# Given simultanious equations <br>
-# x + y + z = 6 <br>
-# 2y + 5z = -4<br>
-# 2x + 5y -z = 27<br> 
