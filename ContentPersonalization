@@ -1,0 +1,468 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "Untitled6.ipynb",
+      "provenance": [],
+      "authorship_tag": "ABX9TyO/FGfKR01rjVRytSfideMp",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/pponvannan/AIMLMadeEasy/blob/master/ContentPersonalization\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "OPlEg_vV6Q5A"
+      },
+      "source": [
+        "import numpy as np # linear algebra\n",
+        "import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)\n",
+        "import matplotlib.pyplot as plt"
+      ],
+      "execution_count": 2,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "zCoMbBRN7QrP"
+      },
+      "source": [
+        "data = pd.read_csv('result_final.csv')"
+      ],
+      "execution_count": 3,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "2ulc-Cv_7Uty",
+        "outputId": "507cae0f-fd54-4fc3-e2d5-ab9ed4c2bf20"
+      },
+      "source": [
+        "data.shape"
+      ],
+      "execution_count": 4,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "(2190, 9)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 4
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 539
+        },
+        "id": "8l1Hvkll7YRY",
+        "outputId": "2c3a378e-ed44-41d3-8000-18f3258f6d5f"
+      },
+      "source": [
+        "data.head()"
+      ],
+      "execution_count": 5,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/html": [
+              "<div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>Unnamed: 0</th>\n",
+              "      <th>Unnamed: 0.1</th>\n",
+              "      <th>link</th>\n",
+              "      <th>text</th>\n",
+              "      <th>title</th>\n",
+              "      <th>date</th>\n",
+              "      <th>keywords</th>\n",
+              "      <th>summary</th>\n",
+              "      <th>title_summary</th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>0</th>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>http://techcrunch.com/2020/09/07/vodafone-idea...</td>\n",
+              "      <td>Vodafone Idea, one of the largest telecom oper...</td>\n",
+              "      <td>Indian telecom giant Vodafone Idea rebrands as...</td>\n",
+              "      <td>2020-09-07 00:00:00</td>\n",
+              "      <td>['rebrands', 'idea', 'vi', 'giant', 'brand', '...</td>\n",
+              "      <td>Vodafone Idea, one of the largest telecom oper...</td>\n",
+              "      <td>Indian telecom giant Vodafone Idea rebrands as...</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>1</th>\n",
+              "      <td>1</td>\n",
+              "      <td>1</td>\n",
+              "      <td>http://techcrunch.com/2020/09/16/facebook-addr...</td>\n",
+              "      <td>At the beginning of the previous decade, Faceb...</td>\n",
+              "      <td>Facebook addresses political controversy in In...</td>\n",
+              "      <td>2020-09-16 00:00:00</td>\n",
+              "      <td>['opportunities', 'whatsapp', 'controversy', '...</td>\n",
+              "      <td>Politicians in the country today heavily rely ...</td>\n",
+              "      <td>Facebook addresses political controversy in In...</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>2</th>\n",
+              "      <td>2</td>\n",
+              "      <td>2</td>\n",
+              "      <td>http://techcrunch.com/2020/09/14/youtube-launc...</td>\n",
+              "      <td>As TikTok’s fate in the U.S. remains murky, Yo...</td>\n",
+              "      <td>YouTube launches its TikTok rival, YouTube Sho...</td>\n",
+              "      <td>2020-09-14 00:00:00</td>\n",
+              "      <td>['rival', 'video', 'feature', 'access', 'youtu...</td>\n",
+              "      <td>As TikTok’s fate in the U.S. remains murky, Yo...</td>\n",
+              "      <td>YouTube launches its TikTok rival, YouTube Sho...</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>3</th>\n",
+              "      <td>3</td>\n",
+              "      <td>3</td>\n",
+              "      <td>http://techcrunch.com/2020/09/09/groww-an-inve...</td>\n",
+              "      <td>Even as more than 150 million people are using...</td>\n",
+              "      <td>Groww, an investment app for millennials in In...</td>\n",
+              "      <td>2020-09-09 00:00:00</td>\n",
+              "      <td>['world', 'yc', 'continuity', 'stocks', 'groww...</td>\n",
+              "      <td>YC Continuity, the growth-stage investment fun...</td>\n",
+              "      <td>Groww, an investment app for millennials in In...</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>4</th>\n",
+              "      <td>4</td>\n",
+              "      <td>4</td>\n",
+              "      <td>http://techcrunch.com/2020/09/15/lanzatech-is-...</td>\n",
+              "      <td>As part of the continuing global rollout of La...</td>\n",
+              "      <td>LanzaTech is developing a small-scale waste bi...</td>\n",
+              "      <td>2020-09-15 00:00:00</td>\n",
+              "      <td>['production', 'distributed', 'developing', 's...</td>\n",
+              "      <td>As part of the continuing global rollout of La...</td>\n",
+              "      <td>LanzaTech is developing a small-scale waste bi...</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div>"
+            ],
+            "text/plain": [
+              "   Unnamed: 0  ...                                      title_summary\n",
+              "0           0  ...  Indian telecom giant Vodafone Idea rebrands as...\n",
+              "1           1  ...  Facebook addresses political controversy in In...\n",
+              "2           2  ...  YouTube launches its TikTok rival, YouTube Sho...\n",
+              "3           3  ...  Groww, an investment app for millennials in In...\n",
+              "4           4  ...  LanzaTech is developing a small-scale waste bi...\n",
+              "\n",
+              "[5 rows x 9 columns]"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 5
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "bPOImNaz7dcx"
+      },
+      "source": [
+        "data = data.drop_duplicates(subset=None, keep='first', inplace=False)"
+      ],
+      "execution_count": 6,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "IZZVBg8i7iUL",
+        "outputId": "dd68ade6-62d8-447c-e2ba-3844a14f2d5b"
+      },
+      "source": [
+        "data.shape"
+      ],
+      "execution_count": 7,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "(2190, 9)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 7
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 1000
+        },
+        "id": "cE-o4QVk7lem",
+        "outputId": "c1cf7c09-20f7-4e5d-f5b2-e688888ed1a2"
+      },
+      "source": [
+        "data.insert(0,'id',range(0,data.shape[0]))\n",
+        "data"
+      ],
+      "execution_count": 8,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/html": [
+              "<div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>id</th>\n",
+              "      <th>Unnamed: 0</th>\n",
+              "      <th>Unnamed: 0.1</th>\n",
+              "      <th>link</th>\n",
+              "      <th>text</th>\n",
+              "      <th>title</th>\n",
+              "      <th>date</th>\n",
+              "      <th>keywords</th>\n",
+              "      <th>summary</th>\n",
+              "      <th>title_summary</th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>0</th>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>http://techcrunch.com/2020/09/07/vodafone-idea...</td>\n",
+              "      <td>Vodafone Idea, one of the largest telecom oper...</td>\n",
+              "      <td>Indian telecom giant Vodafone Idea rebrands as...</td>\n",
+              "      <td>2020-09-07 00:00:00</td>\n",
+              "      <td>['rebrands', 'idea', 'vi', 'giant', 'brand', '...</td>\n",
+              "      <td>Vodafone Idea, one of the largest telecom oper...</td>\n",
+              "      <td>Indian telecom giant Vodafone Idea rebrands as...</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>1</th>\n",
+              "      <td>1</td>\n",
+              "      <td>1</td>\n",
+              "      <td>1</td>\n",
+              "      <td>http://techcrunch.com/2020/09/16/facebook-addr...</td>\n",
+              "      <td>At the beginning of the previous decade, Faceb...</td>\n",
+              "      <td>Facebook addresses political controversy in In...</td>\n",
+              "      <td>2020-09-16 00:00:00</td>\n",
+              "      <td>['opportunities', 'whatsapp', 'controversy', '...</td>\n",
+              "      <td>Politicians in the country today heavily rely ...</td>\n",
+              "      <td>Facebook addresses political controversy in In...</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>2</th>\n",
+              "      <td>2</td>\n",
+              "      <td>2</td>\n",
+              "      <td>2</td>\n",
+              "      <td>http://techcrunch.com/2020/09/14/youtube-launc...</td>\n",
+              "      <td>As TikTok’s fate in the U.S. remains murky, Yo...</td>\n",
+              "      <td>YouTube launches its TikTok rival, YouTube Sho...</td>\n",
+              "      <td>2020-09-14 00:00:00</td>\n",
+              "      <td>['rival', 'video', 'feature', 'access', 'youtu...</td>\n",
+              "      <td>As TikTok’s fate in the U.S. remains murky, Yo...</td>\n",
+              "      <td>YouTube launches its TikTok rival, YouTube Sho...</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>3</th>\n",
+              "      <td>3</td>\n",
+              "      <td>3</td>\n",
+              "      <td>3</td>\n",
+              "      <td>http://techcrunch.com/2020/09/09/groww-an-inve...</td>\n",
+              "      <td>Even as more than 150 million people are using...</td>\n",
+              "      <td>Groww, an investment app for millennials in In...</td>\n",
+              "      <td>2020-09-09 00:00:00</td>\n",
+              "      <td>['world', 'yc', 'continuity', 'stocks', 'groww...</td>\n",
+              "      <td>YC Continuity, the growth-stage investment fun...</td>\n",
+              "      <td>Groww, an investment app for millennials in In...</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>4</th>\n",
+              "      <td>4</td>\n",
+              "      <td>4</td>\n",
+              "      <td>4</td>\n",
+              "      <td>http://techcrunch.com/2020/09/15/lanzatech-is-...</td>\n",
+              "      <td>As part of the continuing global rollout of La...</td>\n",
+              "      <td>LanzaTech is developing a small-scale waste bi...</td>\n",
+              "      <td>2020-09-15 00:00:00</td>\n",
+              "      <td>['production', 'distributed', 'developing', 's...</td>\n",
+              "      <td>As part of the continuing global rollout of La...</td>\n",
+              "      <td>LanzaTech is developing a small-scale waste bi...</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>...</th>\n",
+              "      <td>...</td>\n",
+              "      <td>...</td>\n",
+              "      <td>...</td>\n",
+              "      <td>...</td>\n",
+              "      <td>...</td>\n",
+              "      <td>...</td>\n",
+              "      <td>...</td>\n",
+              "      <td>...</td>\n",
+              "      <td>...</td>\n",
+              "      <td>...</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>2185</th>\n",
+              "      <td>2185</td>\n",
+              "      <td>1285</td>\n",
+              "      <td>1285</td>\n",
+              "      <td>https://uk.reuters.com/article/uk-brazil-econo...</td>\n",
+              "      <td>BRASILIA (Reuters) - Paulo Guedes has faced hi...</td>\n",
+              "      <td>Brazil's Guedes finds influence waning as Bols...</td>\n",
+              "      <td>2020-09-16 18:18:18+00:00</td>\n",
+              "      <td>['bolsonaro', 'guedes', 'reins', 'economic', '...</td>\n",
+              "      <td>FILE PHOTO: Brazil's Economy Minister Paulo Gu...</td>\n",
+              "      <td>Brazil's Guedes finds influence waning as Bols...</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>2186</th>\n",
+              "      <td>2186</td>\n",
+              "      <td>1286</td>\n",
+              "      <td>1286</td>\n",
+              "      <td>https://www.reuters.com/article/us-britain-boe...</td>\n",
+              "      <td>LONDON (Reuters) - The Bank of England is expe...</td>\n",
+              "      <td>Bank of England gears up for next stimulus push</td>\n",
+              "      <td>2020-09-16 23:07:30+00:00</td>\n",
+              "      <td>['push', 'bank', 'england', 'zero', 'signal', ...</td>\n",
+              "      <td>LONDON (Reuters) - The Bank of England is expe...</td>\n",
+              "      <td>Bank of England gears up for next stimulus pus...</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>2187</th>\n",
+              "      <td>2187</td>\n",
+              "      <td>1287</td>\n",
+              "      <td>1287</td>\n",
+              "      <td>https://www.reuters.com/article/syria-crisis-f...</td>\n",
+              "      <td>AMMAN (Reuters) - Syria is experiencing worsen...</td>\n",
+              "      <td>Syria says U.S. sanctions behind acute fuel cr...</td>\n",
+              "      <td>2020-09-16 23:25:09+00:00</td>\n",
+              "      <td>['shortages', 'imports', 'gasoline', 'shipment...</td>\n",
+              "      <td>AMMAN (Reuters) - Syria is experiencing worsen...</td>\n",
+              "      <td>Syria says U.S. sanctions behind acute fuel cr...</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>2188</th>\n",
+              "      <td>2188</td>\n",
+              "      <td>1288</td>\n",
+              "      <td>1288</td>\n",
+              "      <td>https://af.reuters.com/article/uk-iran-usa-wor...</td>\n",
+              "      <td>Curiosity high for TV's anything-can-happen vi...</td>\n",
+              "      <td>Business &amp; Financial News, U.S &amp; International...</td>\n",
+              "      <td>NaN</td>\n",
+              "      <td>['international', 'tvs', 'sundays', 'united', ...</td>\n",
+              "      <td>Curiosity high for TV's anything-can-happen vi...</td>\n",
+              "      <td>Business &amp; Financial News, U.S &amp; International...</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>2189</th>\n",
+              "      <td>2189</td>\n",
+              "      <td>1289</td>\n",
+              "      <td>1289</td>\n",
+              "      <td>https://in.reuters.com/article/global-metals-i...</td>\n",
+              "      <td>MELBOURNE, Sept 17 (Reuters) - London copper f...</td>\n",
+              "      <td>METALS-LME copper falls most in seven sessions...</td>\n",
+              "      <td>2020-09-17 04:45:08+00:00</td>\n",
+              "      <td>['copper', 'sessions', 'metalslme', 'seven', '...</td>\n",
+              "      <td>MELBOURNE, Sept 17 (Reuters) - London copper f...</td>\n",
+              "      <td>METALS-LME copper falls most in seven sessions...</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "<p>2190 rows × 10 columns</p>\n",
+              "</div>"
+            ],
+            "text/plain": [
+              "        id  ...                                      title_summary\n",
+              "0        0  ...  Indian telecom giant Vodafone Idea rebrands as...\n",
+              "1        1  ...  Facebook addresses political controversy in In...\n",
+              "2        2  ...  YouTube launches its TikTok rival, YouTube Sho...\n",
+              "3        3  ...  Groww, an investment app for millennials in In...\n",
+              "4        4  ...  LanzaTech is developing a small-scale waste bi...\n",
+              "...    ...  ...                                                ...\n",
+              "2185  2185  ...  Brazil's Guedes finds influence waning as Bols...\n",
+              "2186  2186  ...  Bank of England gears up for next stimulus pus...\n",
+              "2187  2187  ...  Syria says U.S. sanctions behind acute fuel cr...\n",
+              "2188  2188  ...  Business & Financial News, U.S & International...\n",
+              "2189  2189  ...  METALS-LME copper falls most in seven sessions...\n",
+              "\n",
+              "[2190 rows x 10 columns]"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 8
+        }
+      ]
+    }
+  ]
+}
